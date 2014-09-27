@@ -149,10 +149,12 @@ with J. */
 /* This pair use the same bit. */
 #define PCRE_NEVER_UTF          0x00010000  /* C1        ) Overlaid */
 #define PCRE_DFA_SHORTEST       0x00010000  /*      D    ) Overlaid */
+#define PCRE_NOTBOS	            0x00010000  /*      D    ) Overlaid */
 
 /* This pair use the same bit. */
 #define PCRE_NO_AUTO_POSSESS    0x00020000  /* C1        ) Overlaid */
 #define PCRE_DFA_RESTART        0x00020000  /*      D    ) Overlaid */
+#define PCRE_NOTEOS	            0x00020000  /*      D    ) Overlaid */
 
 #define PCRE_FIRSTLINE          0x00040000  /* C3       */
 #define PCRE_DUPNAMES           0x00080000  /* C1       */
@@ -169,6 +171,7 @@ with J. */
 #define PCRE_PARTIAL_HARD       0x08000000  /*    E D J */
 #define PCRE_NOTEMPTY_ATSTART   0x10000000  /*    E D J */
 #define PCRE_UCP                0x20000000  /* C3       */
+#define PCRE_NOTGPOS            0x40000000  /* C3       */
 
 /* Exec-time and get/set-time error codes */
 

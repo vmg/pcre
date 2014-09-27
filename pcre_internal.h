@@ -1121,7 +1121,7 @@ time, run time, or study time, respectively. */
 #define PUBLIC_EXEC_OPTIONS \
   (PCRE_ANCHORED|PCRE_NOTBOL|PCRE_NOTEOL|PCRE_NOTEMPTY|PCRE_NOTEMPTY_ATSTART| \
    PCRE_NO_UTF8_CHECK|PCRE_PARTIAL_HARD|PCRE_PARTIAL_SOFT|PCRE_NEWLINE_BITS| \
-   PCRE_BSR_ANYCRLF|PCRE_BSR_UNICODE|PCRE_NO_START_OPTIMIZE)
+   PCRE_BSR_ANYCRLF|PCRE_BSR_UNICODE|PCRE_NO_START_OPTIMIZE|PCRE_NOTBOS|PCRE_NOTEOS|PCRE_NOTGPOS)
 
 #define PUBLIC_DFA_EXEC_OPTIONS \
   (PCRE_ANCHORED|PCRE_NOTBOL|PCRE_NOTEOL|PCRE_NOTEMPTY|PCRE_NOTEMPTY_ATSTART| \
@@ -1135,7 +1135,7 @@ time, run time, or study time, respectively. */
 
 #define PUBLIC_JIT_EXEC_OPTIONS \
    (PCRE_NO_UTF8_CHECK|PCRE_NOTBOL|PCRE_NOTEOL|PCRE_NOTEMPTY|\
-    PCRE_NOTEMPTY_ATSTART|PCRE_PARTIAL_SOFT|PCRE_PARTIAL_HARD)
+    PCRE_NOTEMPTY_ATSTART|PCRE_PARTIAL_SOFT|PCRE_PARTIAL_HARD|PCRE_NOTBOS|PCRE_NOTEOS|PCRE_NOTGPOS)
 
 /* Magic number to provide a small check against being handed junk. */
 
@@ -2513,6 +2513,9 @@ typedef struct match_data {
   const  pcre_uint8 *ctypes;      /* Points to table of type maps */
   BOOL   notbol;                  /* NOTBOL flag */
   BOOL   noteol;                  /* NOTEOL flag */
+  BOOL   notbos;                  /* NOTBOS flag */
+  BOOL   noteos;                  /* NOTEOS flag */
+  BOOL   notgpos;				  /* NOTGPOS flag */
   BOOL   utf;                     /* UTF-8 / UTF-16 flag */
   BOOL   jscript_compat;          /* JAVASCRIPT_COMPAT flag */
   BOOL   use_ucp;                 /* PCRE_UCP flag */

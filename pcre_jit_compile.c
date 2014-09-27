@@ -173,6 +173,9 @@ typedef struct jit_arguments {
   int offset_count;
   pcre_uint8 notbol;
   pcre_uint8 noteol;
+  pcre_uint8 notbos;
+  pcre_uint8 noteos;
+  pcre_uint8 notgpos;
   pcre_uint8 notempty;
   pcre_uint8 notempty_atstart;
 } jit_arguments;
@@ -5249,14 +5252,20 @@ switch(type)
   {
   case OP_SOD:
   OP1(SLJIT_MOV, TMP1, 0, ARGUMENTS, 0);
+  OP1(SLJIT_MOV, TMP2, 0, ARGUMENTS, 0);
   OP1(SLJIT_MOV, TMP1, 0, SLJIT_MEM1(TMP1), SLJIT_OFFSETOF(jit_arguments, begin));
   add_jump(compiler, backtracks, CMP(SLJIT_C_NOT_EQUAL, STR_PTR, 0, TMP1, 0));
+  OP1(SLJIT_MOV_UB, TMP2, 0, SLJIT_MEM1(TMP2), SLJIT_OFFSETOF(jit_arguments, notbos));
+  add_jump(compiler, backtracks, CMP(SLJIT_C_NOT_EQUAL, TMP2, 0, SLJIT_IMM, 0));
   return cc;
 
   case OP_SOM:
   OP1(SLJIT_MOV, TMP1, 0, ARGUMENTS, 0);
+  OP1(SLJIT_MOV, TMP2, 0, ARGUMENTS, 0);
   OP1(SLJIT_MOV, TMP1, 0, SLJIT_MEM1(TMP1), SLJIT_OFFSETOF(jit_arguments, str));
   add_jump(compiler, backtracks, CMP(SLJIT_C_NOT_EQUAL, STR_PTR, 0, TMP1, 0));
+  OP1(SLJIT_MOV_UB, TMP2, 0, SLJIT_MEM1(TMP2), SLJIT_OFFSETOF(jit_arguments, notgpos));
+  add_jump(compiler, backtracks, CMP(SLJIT_C_NOT_EQUAL, TMP2, 0, SLJIT_IMM, 0));
   return cc;
 
   case OP_NOT_WORD_BOUNDARY:
@@ -5519,7 +5528,10 @@ switch(type)
   return cc;
 
   case OP_EOD:
+  OP1(SLJIT_MOV, TMP2, 0, ARGUMENTS, 0);
   add_jump(compiler, backtracks, CMP(SLJIT_C_LESS, STR_PTR, 0, STR_END, 0));
+  OP1(SLJIT_MOV_UB, TMP2, 0, SLJIT_MEM1(TMP2), SLJIT_OFFSETOF(jit_arguments, noteos));
+  add_jump(compiler, backtracks, CMP(SLJIT_C_NOT_EQUAL, TMP2, 0, SLJIT_IMM, 0));
   check_partial(common, FALSE);
   return cc;
 
@@ -10410,6 +10422,9 @@ if (functions->limit_match != 0 && functions->limit_match < arguments.limit_matc
   arguments.limit_match = functions->limit_match;
 arguments.notbol = (options & PCRE_NOTBOL) != 0;
 arguments.noteol = (options & PCRE_NOTEOL) != 0;
+arguments.notbos = (options & PCRE_NOTBOS) != 0;
+arguments.noteos = (options & PCRE_NOTEOS) != 0;
+arguments.notgpos = (options & PCRE_NOTGPOS) != 0;
 arguments.notempty = (options & PCRE_NOTEMPTY) != 0;
 arguments.notempty_atstart = (options & PCRE_NOTEMPTY_ATSTART) != 0;
 arguments.offsets = offsets;
@@ -10503,6 +10518,9 @@ if (functions->limit_match != 0 && functions->limit_match < arguments.limit_matc
   arguments.limit_match = functions->limit_match;
 arguments.notbol = (options & PCRE_NOTBOL) != 0;
 arguments.noteol = (options & PCRE_NOTEOL) != 0;
+arguments.notbos = (options & PCRE_NOTBOS) != 0;
+arguments.noteos = (options & PCRE_NOTEOS) != 0;
+arguments.notgpos = (options & PCRE_NOTGPOS) != 0;
 arguments.notempty = (options & PCRE_NOTEMPTY) != 0;
 arguments.notempty_atstart = (options & PCRE_NOTEMPTY_ATSTART) != 0;
 arguments.offsets = offsets;

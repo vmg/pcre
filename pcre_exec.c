@@ -2075,6 +2075,7 @@ for (;;)
 
     case OP_SOD:
     if (eptr != md->start_subject) RRETURN(MATCH_NOMATCH);
+	if (op == OP_SOD && md->notbos) RRETURN(MATCH_NOMATCH);
     ecode++;
     break;
 
@@ -2092,6 +2093,7 @@ for (;;)
 
     case OP_SOM:
     if (eptr != md->start_subject + md->start_offset) RRETURN(MATCH_NOMATCH);
+	if (md->notgpos) RRETURN(MATCH_NOMATCH);
     ecode++;
     break;
 
@@ -2143,6 +2145,7 @@ for (;;)
 
     case OP_EOD:
     if (eptr < md->end_subject) RRETURN(MATCH_NOMATCH);
+	if (md->noteos) RRETURN(MATCH_NOMATCH);
     SCHECK_PARTIAL();
     ecode++;
     break;
@@ -6554,6 +6557,9 @@ them will be faster than individual option bits. */
 
 md->notbol = (options & PCRE_NOTBOL) != 0;
 md->noteol = (options & PCRE_NOTEOL) != 0;
+md->notbos = (options & PCRE_NOTBOS) != 0;
+md->noteos = (options & PCRE_NOTEOS) != 0;
+md->notgpos = (options & PCRE_NOTGPOS) != 0;
 md->notempty = (options & PCRE_NOTEMPTY) != 0;
 md->notempty_atstart = (options & PCRE_NOTEMPTY_ATSTART) != 0;
 
